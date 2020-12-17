@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Ensures optimal rendering on mobile devices. -->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <!-- Optimal Internet Explorer compatibility -->
+  <title>Smart button</title>
+  <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+  <script src="/javascripts/jquery-1.9.1.js"></script>
+</head>
+
+<body>
+  <script
+    src="https://www.paypal.com/sdk/js?client-id=AUpOTGgcFaHilQ_iBxQ_FItQ7WUuK0qze2ZwSAew3EtTeNkX4GvK1r7hJw3CmueIjXNU7XekZeU6xSL6&vault=true"> // Required. Replace SB_CLIENT_ID with your sandbox client ID.
+  </script>
+  <header>
+    <div class="container">
+      <div class="header-left">Ben's Test button</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="top-wrapper">
+    <div class="container">
+      <h1>LEARN TO CODE.<br>LEARN SPB</h1>
+      <span class="text-contents">Billing_ID</span><input class="billing-input" type="text" id="BillingId">
+      <span class="text-contents">Amount</span><input class="billing-input" type="text" id="BillingAmount">
+      <div class="btn signup signup-show" id="doRT">随便扣你钱</div>
+    </div>
+  </div>
+  <div class="lesson-wrapper">
+    <div class="container">
+      <div class="heading">
+        <h2>SPB buttons</h2>
+        <p class="result text-contents"></p>
+      </div>
+      <div class="lessons">
+        <div class="lesson lesson-hover">
+          <p class="text-contents">一次支付的的SPB</p>
+          <div class="lesson-icon">
+            <div id="paypal-button-container"></div>
+          </div>
+        </div>
+        <div class="lesson lesson-hover">
+          <p class="text-contents">call from server</p>
+          <span class="text-contents">amount</span><input class="amount-input" type="text" id="amount1">
+          <div class="lesson-icon">
+            <div id="paypal-button-callfromserver"></div>
+          </div>
+        </div>
+        <div class="lesson lesson-hover">
+          <p class="text-contents">Subscription</p>
+         <!-- <div class="lesson-icon">
+            <img src="https://prog-8.com/images/html/advanced/ruby.png">
+            <p>Subscribe</p>
+          </div>
+          <p class="text-contents">这里做subscription button</p>-->
+          <div class="lesson-icon">
+            <div id="paypal-button-subscription"></div>
+          </div>
+        </div>
+        <div class="lesson lesson-hover">
+          <p class="text-contents">Reference transaction</p>
+          <!--<div class="lesson-icon">
+            <img src="https://prog-8.com/images/html/advanced/php.png">
+            <p>RT</p>
+          </div>
+          <p class="text-contents">这里做RT的button</p>-->
+          <div class="lesson-icon">
+            <div id="paypal-button-rt"></div>
+          </div>
+        </div>
+      </div>
+      
+    </div>
+  </div>
+  <footer>
+    <div class="container">
+      <img src="/images/logo.jfif">
+    </div>
+  </footer>
+
+  <script src="javascripts/script.js"></script>
+</body>
+
+</html>
