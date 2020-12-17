@@ -8,10 +8,144 @@
     <script src="javascripts/jquery-1.9.1.js"></script>    
   </head>
   <body>
-    <div>
-      <p>UCC</p>
-      <div id="paypal-button-container"></div>
+    <div class="loader-lty" id="loader" >
+      <div class="loader" ></div>
     </div>
-    <script src="javascripts/ucc.js"></script>
+    <!-- Custom Card Fields form -->
+    <div id="ucc_lty2" style="display: none;" class='card_container'>
+      <form id='my-sample-form'>
+        <label for='card-number'>Card Number</label><div id='card-number' class='card_field'></div>
+        <div style="width:49%; display: inline-block;">
+          <label for='expiration-date'>Expiration Date</label><div id='expiration-date' class='card_field'></div>
+        </div>
+        <div style="width:50%; display: inline-block; float:right">
+          <label for='cvv'>CVV</label><div id='cvv' class='card_field'></div>
+        </div>
+        <label for='card-holder-name'>Name on Card (Optional)</label><input type='text' id='card-holder-name' name='card-holder-name' autocomplete='off' placeholder='card holder name'/>
+        <div style="width:49%; display: inline-block;">
+          <label for='card-billing-address-street'>Billing Address (Optional)</label><input type='text' id='card-billing-address-street' name='card-billing-address-street' autocomplete='off' placeholder='Street address'/>
+        </div>
+        <div style="width:50%; display: inline-block; float:right">
+          <label for='card-billing-address-unit'>&nbsp;</label><input type='text' id='card-billing-address-unit' name='card-billing-address-unit' autocomplete='off' placeholder='Unit'/>
+        </div>
+        <div style="width:49%; display: inline-block;">
+          <input type='text' id='card-billing-address-city' name='card-billing-address-city' autocomplete='off' placeholder='City'/>
+        </div>
+        <div style="width:50%; display: inline-block; float:right">
+          <input type='text' id='card-billing-address-state' name='card-billing-address-state' autocomplete='off' placeholder='State'/>
+        </div>
+        <div style="width:49%; display: inline-block;">
+          <input type='text' id='card-billing-address-zip' name='card-billing-address-zip' autocomplete='off' placeholder='Zip / Postal code'/>
+        </div>
+        <div style="width:50%; display: inline-block; float:right">
+          <input type='text' id='card-billing-address-country' name='card-billing-address-country' autocomplete='off' placeholder='Country code' />
+        </div>
+        <br><br>
+        <button value='submit' id='submit' class='btn'>Continue</button>
+      </form>
+      <div>
+        <input type="checkbox" id="vault" name="vault">
+        <label for="vault">Save your card</label>
+      </div>
+      <p>VISA number for testing: 4012888888881881/4111111111111111, 11/2025, 720</p>​
+    </div>
+
+    <script>
+      fetch("/ucc/generate-token", {
+          method: 'POST',
+          headers: {
+              'content-type': 'application/json'
+          }
+      }).then(function (data) {
+          return data.json();
+      }).then(function (result) {
+          var head = document.getElementsByTagName('head')[0];
+          var script = document.createElement('script');
+          script.type = 'text/javascript';
+          script.src = "https://www.paypal.com/sdk/js?components=hosted-fields&client-id=AdNQK0bxzQYMSmXPRM371oydWcsdrtOqvnjajX9kJ05-h8hP5gAmH3HHDK1MiQg7IMFN2WKgF0qlV-vj&debug=false&currency=USD&intent=capture&locale=en_US";
+          
+          script.setAttribute("data-client-token", result.client_token);
+          script.onload = function() { 
+              // document.getElementById("ucc_lty1").style.display = "block";
+              document.getElementById("ucc_lty2").style.display = "block";
+              document.getElementById("loader").style.display = "none";
+               if (paypal.HostedFields.isEligible()) {
+                  paypal.HostedFields.render({
+                  createOrder: function () {return result.order_id;}, // replace orderID with your order ID
+                  styles: {
+                      'input': {
+                          'font-size': '17px',
+                          'font-family': 'helvetica, tahoma, calibri, sans-serif',
+                          'color': '#3a3a3a'
+                      },
+                      ':focus': {
+                          'color': 'black'
+                      }
+                  },
+                  fields: {
+                      number: {
+                          selector: '#card-number',
+                          placeholder: 'card number'
+                      },
+                      cvv: {
+                          selector: '#cvv',
+                          placeholder: 'card security number'
+                      },
+                      expirationDate: {
+                      selector: '#expiration-date',
+                      placeholder: 'mm/yy'
+                      }
+                  }
+                  }).then(function (hf) {
+                      $('#my-sample-form').submit(function (event) {
+                          event.preventDefault();
+                          var submit = document.getElementById("submit");
+                          submit.disabled = true;
+                          submit.innerHTML = "Loading...";
+                          document.getElementById("loader").style.display = "block";
+                          hf.submit({
+                              //Cardholder Name
+                              cardholderName: 'Tse Hiu Yeung',
+                              // Billing Address
+                              billingAddress: {
+                                  streetAddress: '2211 N First Street',      // address_line_1 - street
+                                  extendedAddress: 'Building 17',       // address_line_2 - unit
+                                  region: 'San Jose',           // admin_area_1 - state
+                                  locality: 'CA',          // admin_area_2 - town / city
+                                  postalCode: '95131',           // postal_code - postal_code
+                                  countryCodeAlpha2: 'US'   // country_code - country
+                              },
+                              vault: document.querySelector('#vault').checked
+                          }).then((result) => {
+                              return fetch('/order-capture', {
+                                  method: 'post',
+                                  headers: {
+                                      'content-type': 'application/json'
+                                  },
+                                  body: JSON.stringify({
+                                      orderId: result.orderId
+                                  })
+                              }).then(function (data) {
+                                  return data.json();
+                              }).then(function (json) {
+                                if(document.querySelector('#vault').checked){
+                                  window.location.replace("/spb-ucc-vault");
+                                } else{
+                                  alert("Payment is completed!")
+                                  window.location.replace("/ucc-form");
+                                }
+                              });
+                          }).catch((err)=>{
+                              console.log(err);
+                          });
+                      });
+                  });
+              } else {
+                  $('#my-sample-form').hide();    // hide hosted fields
+              }
+           };
+          head.appendChild(script);
+      });
+    </script>
   </body>
 </html>

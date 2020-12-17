@@ -6,7 +6,9 @@ var logger = require('morgan');
 var bodyParser = require('body-parser');
 
 var index = require('./routes/index');
-var ucc = require('./routes/ucc');
+var uccRouter = require('./routes/ucc');
+var vaultRouter = require('./routes/vault');
+// var order_capture = require('./routes/order-capture');
 
 var app = express();
 
@@ -23,7 +25,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/ucc', ucc);
+app.use('/ucc', uccRouter);
+app.use('/vault', vaultRouter);
+// app.use('/order-capture', order_capture);
 
 // app.listen(app.get('port'), function() {
 //   console.log('Express server listening on port ' + app.get('port'));
@@ -34,6 +38,11 @@ app.use(function(req, res, next) {
   next(createError(404));
 });
 
+const welcomeText = () => {
+  console.log("UCC/Vault Project is started. \n\nPlease go to \"http://localhost:3000/\"...")
+}
+
+welcomeText();
 
 // error handler
 app.use(function(err, req, res, next) {
