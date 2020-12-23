@@ -22,8 +22,8 @@
 	0% { transform: rotate(0deg); }
 	100% { transform: rotate(360deg); }
 	}
-	
-	.paypal-button-container {
+
+.paypal-button-container {
     border-radius: 5px;
     background-color: #FFFFFF;
     padding: 20px;

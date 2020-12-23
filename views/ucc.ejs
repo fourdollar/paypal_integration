@@ -11,8 +11,16 @@
     <div class="loader-lty" id="loader" >
       <div class="loader" ></div>
     </div>
+    <table id="ucc_wrap1" class="paypal-button-container" border="0" align="center" valign="top" bgcolor="#FFFFFF" style="width:39%">
+      <tr>
+        <td colspan="10">
+          <div id="paypal-button-container" style="width:400px"></div>
+        </td>
+      </tr>
+      <tr><td colspan="10">&nbsp;</td></tr>
+    </table>
     <!-- Custom Card Fields form -->
-    <div id="ucc_lty2" style="display: none;" class='card_container'>
+    <div id="ucc_wrap2" style="display: none;" class='card_container'>
       <form id='my-sample-form'>
         <label for='card-number'>Card Number</label><div id='card-number' class='card_field'></div>
         <div style="width:49%; display: inline-block;">
@@ -47,7 +55,10 @@
         <input type="checkbox" id="vault" name="vault">
         <label for="vault">Save your card</label>
       </div>
-      <p>VISA number for testing: 4012888888881881/4111111111111111, 11/2025, 720</p>​
+      <p>VISA number for testing: 4012888888881881/4111111111111111, 11/2025, 720</p>
+      <p>AMEX number for testing: 376680816376961/371449635398431</p>
+      <p>Mastercard number for testing: 5555555555554444/2223000048400011</p>
+      <p class="result text-contents"></p>​
     </div>
 
     <script>
@@ -62,14 +73,55 @@
           var head = document.getElementsByTagName('head')[0];
           var script = document.createElement('script');
           script.type = 'text/javascript';
-          script.src = "https://www.paypal.com/sdk/js?components=hosted-fields&client-id=AdNQK0bxzQYMSmXPRM371oydWcsdrtOqvnjajX9kJ05-h8hP5gAmH3HHDK1MiQg7IMFN2WKgF0qlV-vj&debug=false&currency=USD&intent=capture&locale=en_US";
+          script.src = "https://www.paypal.com/sdk/js?components=buttons,hosted-fields&client-id=AdNQK0bxzQYMSmXPRM371oydWcsdrtOqvnjajX9kJ05-h8hP5gAmH3HHDK1MiQg7IMFN2WKgF0qlV-vj&currency=USD&intent=capture&vault=true";
           
           script.setAttribute("data-client-token", result.client_token);
           script.onload = function() { 
-              // document.getElementById("ucc_lty1").style.display = "block";
-              document.getElementById("ucc_lty2").style.display = "block";
+              document.getElementById("ucc_wrap1").style.display = "block";
+              document.getElementById("ucc_wrap2").style.display = "block";
               document.getElementById("loader").style.display = "none";
-               if (paypal.HostedFields.isEligible()) {
+              paypal.Buttons({
+                  style: {
+                      color:  'blue',
+                      shape:  'pill',
+                      label:  'pay',
+                      height: 40
+                  },
+                  createOrder: function(data, actions) {
+                      // This function sets up the details of the transaction, including the amount and line item details
+                      return fetch('/ucc/create-order', {
+                        method: 'post',
+                        headers: {
+                          'content-type': 'application/json'
+                        }
+                      }).then(function(res) {
+                        return res.json();
+                      }).then(function(data) {
+                        console.log(data);
+                        return data.order_id; // Use the same key name for order ID on the client and server
+                      });
+                  },
+                  onApprove: function(data, actions) {
+                      console.log(data.order_id);
+                      // This function captures the funds from the transaction
+                      return fetch('/ucc/order-capture', {
+                        method: 'post',
+                        headers: {
+                          'content-type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                          orderId: data.orderID
+                        })
+                      }).then(function(res) {
+                        return res.json();
+                      }).then(function(details) {
+                        console.log("===================details==================");
+                        console.log(details);
+                        $('.result').text(JSON.stringify(details))
+                      })
+                  }
+              }).render('#paypal-button-container');
+              if (paypal.HostedFields.isEligible()) {
                   paypal.HostedFields.render({
                   createOrder: function () {return result.order_id;}, // replace orderID with your order ID
                   styles: {
@@ -105,7 +157,7 @@
                           document.getElementById("loader").style.display = "block";
                           hf.submit({
                               //Cardholder Name
-                              cardholderName: 'Tse Hiu Yeung',
+                              cardholderName: 'ucc test',
                               // Billing Address
                               billingAddress: {
                                   streetAddress: '2211 N First Street',      // address_line_1 - street
@@ -117,7 +169,7 @@
                               },
                               vault: document.querySelector('#vault').checked
                           }).then((result) => {
-                              return fetch('/order-capture', {
+                              return fetch('/ucc/order-capture', {
                                   method: 'post',
                                   headers: {
                                       'content-type': 'application/json'
@@ -129,11 +181,15 @@
                                   return data.json();
                               }).then(function (json) {
                                 if(document.querySelector('#vault').checked){
-                                  window.location.replace("/spb-ucc-vault");
+                                  // window.location.replace("/spb-ucc-vault");
+                                  $('.result').text(JSON.stringify(json))
+                                  console.log("vaulted: "+JSON.stringify(json));
                                 } else{
-                                  alert("Payment is completed!")
-                                  window.location.replace("/ucc-form");
+                                  $('.result').text(JSON.stringify(json))
+                                  console.log("payment completed: "+JSON.stringify(json));
+                                  // window.location.replace("/ucc-form");
                                 }
+                                document.getElementById("loader").style.display = "none";
                               });
                           }).catch((err)=>{
                               console.log(err);
