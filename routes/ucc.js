@@ -124,7 +124,7 @@ const getClientData = (access_token) => {
           ], 
           auth: { bearer: access_token },
           body: {
-              customer_id: "testttt"
+              customer_id: "testcustomer3"
           },
           json: true
         }, function (error, res, data) {

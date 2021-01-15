@@ -5,7 +5,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1"> <!-- Ensures optimal rendering on mobile devices. -->
   <meta http-equiv="X-UA-Compatible" content="IE=edge" /> <!-- Optimal Internet Explorer compatibility -->
-  <title>Smart button</title>
+  <title>Demo site</title>
   <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
   <script src="/javascripts/jquery-1.9.1.js"></script>
@@ -24,56 +24,78 @@
 
   <div class="top-wrapper">
     <div class="container">
-      <h1>LEARN TO CODE.<br>LEARN SPB</h1>
-      <span class="text-contents">Billing_ID</span><input class="billing-input" type="text" id="BillingId">
-      <span class="text-contents">Amount</span><input class="billing-input" type="text" id="BillingAmount">
-      <div class="btn signup signup-show" id="doRT">随便扣你钱</div>
+      <h1>LEARN TO CODE.<br>LEARN PAYAPL INTEGRATION</h1>
+      
     </div>
   </div>
-  <div class="lesson-wrapper">
+  <div class="spb-wrapper">
     <div class="container">
       <div class="heading">
         <h2>SPB buttons</h2>
         <p class="result text-contents"></p>
       </div>
-      <div class="lessons">
-        <div class="lesson lesson-hover">
+      <div class="spbs">
+        <div class="spb spb-hover">
           <p class="text-contents">一次支付的的SPB</p>
-          <div class="lesson-icon">
+          <div class="spb-icon">
             <div id="paypal-button-container"></div>
           </div>
         </div>
-        <div class="lesson lesson-hover">
+        <div class="spb spb-hover">
           <p class="text-contents">call from server</p>
           <span class="text-contents">amount</span><input class="amount-input" type="text" id="amount1">
-          <div class="lesson-icon">
+          <div class="spb-icon">
             <div id="paypal-button-callfromserver"></div>
           </div>
         </div>
-        <div class="lesson lesson-hover">
+        <div class="spb spb-hover">
           <p class="text-contents">Subscription</p>
-         <!-- <div class="lesson-icon">
-            <img src="https://prog-8.com/images/html/advanced/ruby.png">
-            <p>Subscribe</p>
-          </div>
-          <p class="text-contents">这里做subscription button</p>-->
-          <div class="lesson-icon">
+          <div class="spb-icon">
             <div id="paypal-button-subscription"></div>
           </div>
         </div>
-        <div class="lesson lesson-hover">
+        <div class="spb spb-hover">
           <p class="text-contents">Reference transaction</p>
-          <!--<div class="lesson-icon">
-            <img src="https://prog-8.com/images/html/advanced/php.png">
-            <p>RT</p>
-          </div>
-          <p class="text-contents">这里做RT的button</p>-->
-          <div class="lesson-icon">
+          <div class="spb-icon">
             <div id="paypal-button-rt"></div>
           </div>
         </div>
+        <span class="text-contents">Billing_ID</span><input class="billing-input" type="text" id="BillingId">
+        <span class="text-contents">Amount</span><input class="billing-input" type="text" id="BillingAmount">
+        <div class="btn signup signup-show" id="doRT">DoRT</div>
       </div>
-      
+    </div>
+  </div>
+  <div class="vault-wrapper">
+    <div class="container">
+      <div class="heading">
+        <h2>Vault API</h2>
+      </div>
+      <div class="vaults">
+        <div class="vault-credential">
+          <div class="form-group inline">
+            <label>Customer ID</label>
+            <input id="customerid" type="text" value="testcustomer1">
+          </div>
+          <div class="form-group">
+            <label>ClientID</label>
+            <input id="clientid" type="text" value="AdNQK0bxzQYMSmXPRM371oydWcsdrtOqvnjajX9kJ05-h8hP5gAmH3HHDK1MiQg7IMFN2WKgF0qlV-vj">
+          </div>
+          <div class="form-group">
+            <label>SECRET</label>
+            <input id="secret" type="text" value="EOC-7vg6E2HX1H0wakW4TQdSqS4R6cLRLBjftAs5y_gHzwXztT-UCwSgiu7N1dBl73SioeWbVRfKSKyo">
+          </div>
+        </div>
+        <div class="vault vault-get">
+          <div class="btn" id="get-vault" style="background-color: #55acee"><span class="fa fa-credit-card"></span>Get Vault</div>
+          <div id="vaulted_tbdata">
+
+          </div>
+        </div>
+        <div class="vault vault-add">
+
+        </div>
+      </div>
     </div>
   </div>
   <footer>
@@ -82,7 +104,8 @@
     </div>
   </footer>
 
-  <script src="javascripts/script.js"></script>
+  <script src="javascripts/spb.js"></script>
+  <script src="javascripts/vault.js"></script>
 </body>
 
 </html>

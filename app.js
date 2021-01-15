@@ -8,7 +8,6 @@ var bodyParser = require('body-parser');
 var index = require('./routes/index');
 var uccRouter = require('./routes/ucc');
 var vaultRouter = require('./routes/vault');
-// var order_capture = require('./routes/order-capture');
 
 var app = express();
 
