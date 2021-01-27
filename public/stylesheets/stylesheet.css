@@ -241,11 +241,11 @@ header .container{
   color: #5f5d60;
   overflow: auto;
 }
-.vault {
+.vault-credential {
+  width: 60%;
   float: left;
-  width: 50%;
 }
-.vaults input {
+.vault-credential input {
   width: 500px;
   margin-bottom: 20px;
   font-size: 14px;
@@ -253,9 +253,27 @@ header .container{
   border: 1px solid #d0d5d8;
   border-radius: 5px;
 }
-.vault-get{
+.vault-get {
+  margin-left: 60%;
   background-color: #F3F2EE;
-  min-height: 500px;
+  min-height: 200px;
+}
+#vaulted_tbdata{
+  font-size: 16px;
+  margin: 0 auto;
+}
+#vaulted_tbdata tr{
+  width:30%;
+}
+#vaulted_tbdata td:first-child{
+  padding-left:22px;
+}
+#vaulted_tbdata td{
+  font-size: 16px;
+  padding:8px 16px;
+  width: 10%;
+  border-bottom:1px solid #e3e3e3;
+  vertical-align: middle;
 }
 
 #vault-list {

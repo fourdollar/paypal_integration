@@ -26,7 +26,7 @@ router.post('/', function(req, response) {
   }, function (error, res, body) {
 
     var result_json = JSON.parse(body)
-
+    console.log(result_json);
     var ac_token = result_json.access_token;
     console.log(ac_token);
     var vpt_list;
